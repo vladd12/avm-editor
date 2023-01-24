@@ -8,12 +8,17 @@ set(CMAKE_AUTORCC ON)
 # Language settings
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# Adding path for cmake scripts
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # Finding Qt
 find_package(QT NAMES Qt6 Qt5)
 find_package(Qt${QT_VERSION_MAJOR}
     COMPONENTS Core Widgets
     REQUIRED)
+
+#include(conan_install_dependencies)
+include(get_sqlitecpp)
 
 # Collecting project's public headers
 set(AVM_EDITOR_PUBLIC_HEADERS
@@ -36,7 +41,8 @@ add_executable(${PROJECT_NAME}
 # Libraries linking with project executable file
 target_link_libraries(avm-editor PRIVATE
     Qt${QT_VERSION_MAJOR}::Core
-    Qt${QT_VERSION_MAJOR}::Widgets)
+    Qt${QT_VERSION_MAJOR}::Widgets
+    SQLiteCpp)
 
 # Finalize executable (Qt6 only)
 if(QT_VERSION_MAJOR EQUAL 6)
