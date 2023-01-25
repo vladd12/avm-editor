@@ -11,40 +11,84 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Adding path for cmake scripts
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+# Library's options
+option(AVM_EDITOR_STATIC_BUILD "Build avm-editor as static library" OFF)
+option(AVM_EDITOR_BUILD_EXAMPLE "Build example application with using avm-editor" ON)
+option(AVM_EDITOR_BUILD_TESTS "Build tests for avm-editor library" ON)
+
 # Finding Qt
 find_package(QT NAMES Qt6 Qt5)
 find_package(Qt${QT_VERSION_MAJOR}
     COMPONENTS Core Widgets
     REQUIRED)
 
+# Dependencies settings
 #include(conan_install_dependencies)
 include(get_sqlitecpp)
 
-# Collecting project's public headers
-set(AVM_EDITOR_PUBLIC_HEADERS
-    include/mainwindow.h)
 # Include directory with project's public headers
 set(INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
 message(STATUS "${PROJECT_NAME} project include path: ${INCLUDE_PATH}")
 include_directories(${INCLUDE_PATH})
 
+# Collecting project's public headers
+set(AVM_EDITOR_PUBLIC_HEADERS
+    include/avm-editor/avm-editor.hpp
+    include/avm-editor/core/config.hpp
+    include/avm-editor/core/core.hpp
+)
+
 # Collecting project sources
 set(AVM_EDITOR_SOURCES
-    src/main.cpp
-    src/mainwindow.cpp)
+    src/core/core.cpp)
 
-# Building project
-add_executable(${PROJECT_NAME}
-    ${AVM_EDITOR_SOURCES}
-    ${AVM_EDITOR_PUBLIC_HEADERS})
+# Compilation static library
+if (EXECSTD_STATIC_BUILD)
+    message(STATUS "${PROJECT_NAME} is static library")
+    add_library(${PROJECT_NAME} STATIC ${AVM_EDITOR_PUBLIC_HEADERS} ${AVM_EDITOR_SOURCES})
+    target_compile_definitions(${PROJECT_NAME} PUBLIC -DSTATIC_BUILD)
+# Compilation dynamic library
+else()
+    message(STATUS "${PROJECT_NAME} is dynamic library")
+    add_library(${PROJECT_NAME} SHARED ${AVM_EDITOR_PUBLIC_HEADERS} ${AVM_EDITOR_SOURCES})
+    target_compile_definitions(${PROJECT_NAME} PRIVATE -DLIB_EXPORT)
+    target_compile_definitions(${PROJECT_NAME} INTERFACE -DLIB_IMPORT)
+endif()
 
-# Libraries linking with project executable file
-target_link_libraries(avm-editor PRIVATE
+# Dependencies linking with library
+# TODO: Maybe libraries should be private?
+target_link_libraries(avm-editor PUBLIC
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Widgets
     SQLiteCpp)
 
-# Finalize executable (Qt6 only)
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(avm-editor)
+# Library compilation settings
+target_compile_definitions(${PROJECT_NAME} PUBLIC -DCMAKE_CONFIG)
+target_include_directories(${PROJECT_NAME} INTERFACE ${INCLUDE_PATH})
+
+# If enabled building example
+if(AVM_EDITOR_BUILD_EXAMPLE)
+    message(STATUS "Example building is enabled")
+    add_subdirectory(example)
 endif()
+# If enabled building tests for library
+if(AVM_EDITOR_BUILD_TESTS)
+    message(STATUS "Tests building is enabled")
+    include(CTest)
+    enable_testing(true)
+    add_subdirectory(tests)
+endif()
+
+
+# Installation binaries for the library
+install(TARGETS
+    ${PROJECT_NAME}
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
+)
+# Installation library's headers
+install(FILES
+    ${EXECSTD_HEADERS}
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}"
+)
