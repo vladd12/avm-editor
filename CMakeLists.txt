@@ -36,11 +36,16 @@ set(AVM_EDITOR_PUBLIC_HEADERS
     include/avm-editor/avm-editor.hpp
     include/avm-editor/core/config.hpp
     include/avm-editor/core/core.hpp
+    include/avm-editor/database/assert.hpp
+    include/avm-editor/database/database.hpp
 )
 
-# Collecting project sources
+# Collecting project's sources
 set(AVM_EDITOR_SOURCES
-    src/core/core.cpp)
+    src/core/core.cpp
+    src/database/assert.cpp
+    src/database/database.cpp
+)
 
 # Compilation static library
 if (EXECSTD_STATIC_BUILD)

@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-void foo()
+void avm::foo()
 {
     std::cout << "bar\n";
 }
