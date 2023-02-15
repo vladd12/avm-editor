@@ -38,6 +38,7 @@ set(AVM_EDITOR_PUBLIC_HEADERS
     include/avm-editor/core/core.hpp
     include/avm-editor/database/assert.hpp
     include/avm-editor/database/database.hpp
+    include/avm-editor/database/table.hpp
 )
 
 # Collecting project's sources
@@ -45,10 +46,11 @@ set(AVM_EDITOR_SOURCES
     src/core/core.cpp
     src/database/assert.cpp
     src/database/database.cpp
+    src/database/table.cpp
 )
 
 # Compilation static library
-if (EXECSTD_STATIC_BUILD)
+if (AVM_EDITOR_STATIC_BUILD)
     message(STATUS "${PROJECT_NAME} is static library")
     add_library(${PROJECT_NAME} STATIC ${AVM_EDITOR_PUBLIC_HEADERS} ${AVM_EDITOR_SOURCES})
     target_compile_definitions(${PROJECT_NAME} PUBLIC -DSTATIC_BUILD)

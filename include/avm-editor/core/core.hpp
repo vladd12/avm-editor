@@ -1,7 +1,11 @@
 #pragma once
 
 #include <avm-editor/core/config.hpp>
+#include <memory>
+#include <QDebug>
 #include <QObject>
+#include <QString>
+#include <QtGlobal>
 
 namespace avm {
 

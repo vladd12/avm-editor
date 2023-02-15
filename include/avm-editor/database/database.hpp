@@ -2,18 +2,22 @@
 
 #include <SQLiteCpp/Database.h>
 #include <avm-editor/core/core.hpp>
-#include <QObject>
+#include <avm-editor/database/table.hpp>
 
 namespace avm {
-/// \brief Database class
+/// \brief Class of database
 class libapi Database : public QObject
 {
     Q_OBJECT
 private:
     SQLite::Database m_db;
+    friend class Table;
 
 public:
-    Database(SQLite::Database &&db, QObject *parent = nullptr);
+    explicit Database(SQLite::Database &&db, QObject *parent = nullptr);
+    Table createTable(const QString &tableName);
+    Table getTable(const QString &tableName);
+    void dropTable(const QString &tableName);
 };
 
 libapi QUniquePtr<Database> createDatabase(const QString &filepath, QObject *parent = nullptr);
