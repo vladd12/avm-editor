@@ -39,6 +39,7 @@ set(AVM_EDITOR_PUBLIC_HEADERS
     include/avm-editor/database/assert.hpp
     include/avm-editor/database/database.hpp
     include/avm-editor/database/table.hpp
+    include/avm-editor/database/detail/insert_impl.hpp
 )
 
 # Collecting project's sources

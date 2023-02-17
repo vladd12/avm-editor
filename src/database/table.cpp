@@ -26,14 +26,16 @@ void Table::select(const QString &columns) const noexcept
 {
     if (isParentExist()) {
         ;
-    }
+    } else
+        printErrorMessage();
 }
 
 void Table::select(const QString &columns, const QString &where) const noexcept
 {
     if (isParentExist()) {
         ;
-    }
+    } else
+        printErrorMessage();
 }
 
 void Table::insert(const QString &values) noexcept
