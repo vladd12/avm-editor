@@ -43,7 +43,7 @@ set(AVM_EDITOR_PUBLIC_HEADERS
 
 # Collecting project's priate headers
 set(AVM_EDITOR_PRIVATE_HEADERS
-    #include/${PROJECT_NAME}/database/detail/file_op.hpp
+    include/${PROJECT_NAME}/database/detail/file_ops.hpp
     include/${PROJECT_NAME}/database/detail/messages_printer.hpp
 )
 
@@ -53,6 +53,7 @@ set(AVM_EDITOR_SOURCES
     src/database/assert.cpp
     src/database/database.cpp
     src/database/table.cpp
+    src/database/detail/file_ops.cpp
     src/database/detail/insert_impl.cpp
     src/database/detail/messages_printer.cpp
 )

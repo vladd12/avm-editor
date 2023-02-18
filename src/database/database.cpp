@@ -1,5 +1,5 @@
-#include <QFile>
 #include <avm-editor/database/database.hpp>
+#include <avm-editor/database/detail/file_ops.hpp>
 #include <avm-editor/database/detail/messages_printer.hpp>
 
 namespace avm
@@ -8,6 +8,10 @@ namespace avm
 Database::Database(const std::string &filepath, const int flags, const int timeout, QObject *parent)
     : QObject(parent), m_db(filepath, flags, timeout)
 {
+    constexpr auto value = 15;
+    int i = 1;
+    i = i + value;
+    Q_UNUSED(i);
 }
 
 Table Database::createTable(const QString &tableName, const QString &schema) noexcept
@@ -20,6 +24,10 @@ Table Database::createTable(const QString &tableName, const QString &schema) noe
     } catch (const SQLite::Exception &e)
     {
         detail::printExceptionMessage(e);
+        return Table();
+    } catch (...)
+    {
+        /// Something bad was here
         return Table();
     }
 }
@@ -55,6 +63,7 @@ QUniquePtr<Database> createDatabase(const QString &filepath, QObject *parent) no
 {
     try
     {
+        detail::createFileInCurrentPath(filepath);
         auto db = new Database(filepath.toStdString(), SQLite::OPEN_CREATE, 10, parent);
         return QUniquePtr<Database>(db);
     } catch (const SQLite::Exception &e)
