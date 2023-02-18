@@ -1,7 +1,10 @@
 #include "testmodule.h"
+
 #include <avm-editor/database/database.hpp>
 
-TestModule::TestModule(QObject *parent) : QObject(parent) {}
+TestModule::TestModule(QObject *parent) : QObject(parent)
+{
+}
 
 void TestModule::testOne()
 {

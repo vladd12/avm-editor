@@ -1,37 +1,46 @@
+#include <QFile>
+#include <QMessageBox>
 #include <avm-editor/database/database.hpp>
 #include <utility>
-#include <QMessageBox>
 
-namespace avm {
+namespace avm
+{
 
-Database::Database(SQLite::Database &&db, QObject *parent) : QObject(parent), m_db(std::move(db)) {}
-
-void exceptionMsgPrint(const SQLite::Exception &ex)
+void printExceptionMessage(const SQLite::Exception &ex)
 {
     qCritical() << "Error: " << ex.what();
+}
+
+Database::Database(const std::string &filepath, const int flags, const int timeout, QObject *parent)
+    : QObject(parent), m_db(filepath, flags, timeout)
+{
 }
 
 Table Database::createTable(const QString &tableName, const QString &schema) noexcept
 {
     auto query = "CREATE TABLE IF NOT EXISTS " + tableName + " (" + schema + ")";
-    try {
+    try
+    {
         m_db.exec(query.toStdString());
         return Table(this, tableName);
-    } catch (const SQLite::Exception &e) {
-        exceptionMsgPrint(e);
+    } catch (const SQLite::Exception &e)
+    {
+        printExceptionMessage(e);
         return Table();
     }
 }
 
 Table Database::getTable(const QString &tableName) noexcept
 {
-    try {
+    try
+    {
         if (m_db.tableExists(tableName.toStdString()))
             return Table(this, tableName);
         else
             return Table();
-    } catch (const SQLite::Exception &e) {
-        exceptionMsgPrint(e);
+    } catch (const SQLite::Exception &e)
+    {
+        printExceptionMessage(e);
         return Table();
     }
 }
@@ -39,33 +48,37 @@ Table Database::getTable(const QString &tableName) noexcept
 void Database::dropTable(const QString &tableName) noexcept
 {
     auto query = "DROP TABLE IF EXISTS " + tableName;
-    try {
+    try
+    {
         m_db.exec(query.toStdString());
-    } catch (const SQLite::Exception &e) {
-        exceptionMsgPrint(e);
+    } catch (const SQLite::Exception &e)
+    {
+        printExceptionMessage(e);
     }
 }
 
 QUniquePtr<Database> createDatabase(const QString &filepath, QObject *parent) noexcept
 {
-    try {
-        auto sqlDb = SQLite::Database(filepath.toStdString(), SQLite::OPEN_CREATE, 10);
-        auto db = new Database(std::move(sqlDb), parent);
+    try
+    {
+        auto db = new Database(filepath.toStdString(), SQLite::OPEN_CREATE, 10, parent);
         return QUniquePtr<Database>(db);
-    } catch (const SQLite::Exception &e) {
-        exceptionMsgPrint(e);
+    } catch (const SQLite::Exception &e)
+    {
+        printExceptionMessage(e);
         return nullptr;
     }
 }
 
 QUniquePtr<Database> openDatabase(const QString &filepath, QObject *parent) noexcept
 {
-    try {
-        auto sqlDb = SQLite::Database(filepath.toStdString(), SQLite::OPEN_READWRITE, 10);
-        auto db = new Database(std::move(sqlDb), parent);
+    try
+    {
+        auto db = new Database(filepath.toStdString(), SQLite::OPEN_READWRITE, 10, parent);
         return QUniquePtr<Database>(db);
-    } catch (const SQLite::Exception &e) {
-        exceptionMsgPrint(e);
+    } catch (const SQLite::Exception &e)
+    {
+        printExceptionMessage(e);
         return nullptr;
     }
 }

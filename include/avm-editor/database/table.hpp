@@ -2,7 +2,8 @@
 
 #include <avm-editor/core/core.hpp>
 
-namespace avm {
+namespace avm
+{
 // Forward declaration of Database class
 class Database;
 

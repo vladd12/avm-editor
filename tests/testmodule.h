@@ -10,16 +10,24 @@ public:
     explicit TestModule(QObject *parent = nullptr);
 private slots:
     /// \brief Вызывается перед первой тестовой функцией
-    void initTestCase() {}
+    void initTestCase()
+    {
+    }
 
     /// \brief Вызывается перед каждой тестовой функцией
-    void init() {}
+    void init()
+    {
+    }
 
     /// \brief Вызывается после каждой тестовой функции
-    void cleanup() {}
+    void cleanup()
+    {
+    }
 
     /// \brief Вызывается после последней тестовой функции
-    void cleanupTestCase() {}
+    void cleanupTestCase()
+    {
+    }
 
     void testOne();
     void testTwo();

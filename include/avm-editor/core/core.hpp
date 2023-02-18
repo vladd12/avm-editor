@@ -1,13 +1,14 @@
 #pragma once
 
-#include <avm-editor/core/config.hpp>
-#include <memory>
 #include <QDebug>
 #include <QObject>
 #include <QString>
 #include <QtGlobal>
+#include <avm-editor/core/config.hpp>
+#include <memory>
 
-namespace avm {
+namespace avm
+{
 
 struct QDeleter
 {
@@ -18,7 +19,7 @@ struct QDeleter
     }
 };
 
-template<typename T> //
+template <typename T> //
 using QUniquePtr = std::unique_ptr<T, QDeleter>;
 
 libapi void foo();

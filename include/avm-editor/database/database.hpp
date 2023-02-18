@@ -4,9 +4,10 @@
 #include <avm-editor/core/core.hpp>
 #include <avm-editor/database/table.hpp>
 
-namespace avm {
+namespace avm
+{
 /// \brief Function for printing error message of exception was thrown.
-libapi void exceptionMsgPrint(const SQLite::Exception &ex);
+libapi void printExceptionMessage(const SQLite::Exception &ex);
 
 /// \brief Class of database
 class libapi Database : public QObject
@@ -17,18 +18,17 @@ private:
     friend class Table;
 
 public:
-    explicit Database(SQLite::Database &&db, QObject *parent = nullptr);
+    explicit Database(const std::string &filepath, const int flags, const int timeout, QObject *parent = nullptr);
+
     Table createTable(const QString &tableName, const QString &schema) noexcept;
     Table getTable(const QString &tableName) noexcept;
     void dropTable(const QString &tableName) noexcept;
 };
 
 libapi QUniquePtr<Database> createDatabase( //
-    const QString &filepath,
-    QObject *parent = nullptr) noexcept;
+    const QString &filepath, QObject *parent = nullptr) noexcept;
 
 libapi QUniquePtr<Database> openDatabase( //
-    const QString &filepath,
-    QObject *parent = nullptr) noexcept;
+    const QString &filepath, QObject *parent = nullptr) noexcept;
 
 } // namespace avm
