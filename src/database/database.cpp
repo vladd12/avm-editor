@@ -64,7 +64,7 @@ QUniquePtr<Database> createDatabase(const QString &filepath, QObject *parent) no
     try
     {
         detail::createFileInCurrentPath(filepath);
-        auto db = new Database(filepath.toStdString(), SQLite::OPEN_CREATE, 10, parent);
+        auto db = new Database(filepath.toStdString(), SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE, 10, parent);
         return QUniquePtr<Database>(db);
     } catch (const SQLite::Exception &e)
     {
