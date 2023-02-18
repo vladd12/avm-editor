@@ -6,9 +6,6 @@
 
 namespace avm
 {
-/// \brief Function for printing error message of exception was thrown.
-libapi void printExceptionMessage(const SQLite::Exception &ex);
-
 /// \brief Class of database
 class libapi Database : public QObject
 {

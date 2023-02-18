@@ -23,7 +23,6 @@ find_package(Qt${QT_VERSION_MAJOR}
     REQUIRED)
 
 # Dependencies settings
-#include(conan_install_dependencies)
 include(get_sqlitecpp)
 
 # Include directory with project's public headers
@@ -33,13 +32,19 @@ include_directories(${INCLUDE_PATH})
 
 # Collecting project's public headers
 set(AVM_EDITOR_PUBLIC_HEADERS
-    include/avm-editor/avm-editor.hpp
-    include/avm-editor/core/config.hpp
-    include/avm-editor/core/core.hpp
-    include/avm-editor/database/assert.hpp
-    include/avm-editor/database/database.hpp
-    include/avm-editor/database/table.hpp
-    include/avm-editor/database/detail/insert_impl.hpp
+    include/${PROJECT_NAME}/avm-editor.hpp
+    include/${PROJECT_NAME}/core/config.hpp
+    include/${PROJECT_NAME}/core/core.hpp
+    include/${PROJECT_NAME}/database/assert.hpp
+    include/${PROJECT_NAME}/database/database.hpp
+    include/${PROJECT_NAME}/database/table.hpp
+    include/${PROJECT_NAME}/database/detail/insert_impl.hpp
+)
+
+# Collecting project's priate headers
+set(AVM_EDITOR_PRIVATE_HEADERS
+    include/${PROJECT_NAME}/database/detail/file_op.hpp
+    include/${PROJECT_NAME}/database/detail/messages_printer.hpp
 )
 
 # Collecting project's sources
@@ -48,17 +53,27 @@ set(AVM_EDITOR_SOURCES
     src/database/assert.cpp
     src/database/database.cpp
     src/database/table.cpp
+    src/database/detail/insert_impl.cpp
+    src/database/detail/messages_printer.cpp
 )
 
 # Compilation static library
 if (AVM_EDITOR_STATIC_BUILD)
     message(STATUS "${PROJECT_NAME} is static library")
-    add_library(${PROJECT_NAME} STATIC ${AVM_EDITOR_PUBLIC_HEADERS} ${AVM_EDITOR_SOURCES})
+    add_library(${PROJECT_NAME} STATIC
+        ${AVM_EDITOR_PUBLIC_HEADERS}
+        ${AVM_EDITOR_PRIVATE_HEADERS}
+        ${AVM_EDITOR_SOURCES}
+    )
     target_compile_definitions(${PROJECT_NAME} PUBLIC -DSTATIC_BUILD)
 # Compilation dynamic library
 else()
     message(STATUS "${PROJECT_NAME} is dynamic library")
-    add_library(${PROJECT_NAME} SHARED ${AVM_EDITOR_PUBLIC_HEADERS} ${AVM_EDITOR_SOURCES})
+    add_library(${PROJECT_NAME} SHARED
+        ${AVM_EDITOR_PUBLIC_HEADERS}
+        ${AVM_EDITOR_PRIVATE_HEADERS}
+        ${AVM_EDITOR_SOURCES}
+    )
     target_compile_definitions(${PROJECT_NAME} PRIVATE -DLIB_EXPORT)
     target_compile_definitions(${PROJECT_NAME} INTERFACE -DLIB_IMPORT)
 endif()
@@ -79,6 +94,7 @@ if(AVM_EDITOR_BUILD_EXAMPLE)
     message(STATUS "Example building is enabled")
     add_subdirectory(example)
 endif()
+
 # If enabled building tests for library
 if(AVM_EDITOR_BUILD_TESTS)
     message(STATUS "Tests building is enabled")
@@ -87,7 +103,6 @@ if(AVM_EDITOR_BUILD_TESTS)
     add_subdirectory(tests)
 endif()
 
-
 # Installation binaries for the library
 install(TARGETS
     ${PROJECT_NAME}
@@ -95,6 +110,7 @@ install(TARGETS
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
 )
+
 # Installation library's headers
 install(FILES
     ${EXECSTD_HEADERS}

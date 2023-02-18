@@ -1,15 +1,9 @@
 #include <QFile>
-#include <QMessageBox>
 #include <avm-editor/database/database.hpp>
-#include <utility>
+#include <avm-editor/database/detail/messages_printer.hpp>
 
 namespace avm
 {
-
-void printExceptionMessage(const SQLite::Exception &ex)
-{
-    qCritical() << "Error: " << ex.what();
-}
 
 Database::Database(const std::string &filepath, const int flags, const int timeout, QObject *parent)
     : QObject(parent), m_db(filepath, flags, timeout)
@@ -25,7 +19,7 @@ Table Database::createTable(const QString &tableName, const QString &schema) noe
         return Table(this, tableName);
     } catch (const SQLite::Exception &e)
     {
-        printExceptionMessage(e);
+        detail::printExceptionMessage(e);
         return Table();
     }
 }
@@ -40,7 +34,7 @@ Table Database::getTable(const QString &tableName) noexcept
             return Table();
     } catch (const SQLite::Exception &e)
     {
-        printExceptionMessage(e);
+        detail::printExceptionMessage(e);
         return Table();
     }
 }
@@ -53,7 +47,7 @@ void Database::dropTable(const QString &tableName) noexcept
         m_db.exec(query.toStdString());
     } catch (const SQLite::Exception &e)
     {
-        printExceptionMessage(e);
+        detail::printExceptionMessage(e);
     }
 }
 
@@ -65,7 +59,7 @@ QUniquePtr<Database> createDatabase(const QString &filepath, QObject *parent) no
         return QUniquePtr<Database>(db);
     } catch (const SQLite::Exception &e)
     {
-        printExceptionMessage(e);
+        detail::printExceptionMessage(e);
         return nullptr;
     }
 }
@@ -78,7 +72,7 @@ QUniquePtr<Database> openDatabase(const QString &filepath, QObject *parent) noex
         return QUniquePtr<Database>(db);
     } catch (const SQLite::Exception &e)
     {
-        printExceptionMessage(e);
+        detail::printExceptionMessage(e);
         return nullptr;
     }
 }

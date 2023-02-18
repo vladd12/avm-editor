@@ -15,7 +15,6 @@ private:
     QString m_Name;
 
     const bool isParentExist() const noexcept;
-    void printErrorMessage() const noexcept;
 
 public:
     /// \brief Default constructor.
