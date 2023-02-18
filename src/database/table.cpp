@@ -1,6 +1,6 @@
 #include <avm-editor/database/database.hpp>
+#include <avm-editor/database/detail/messages_printer.hpp>
 #include <avm-editor/database/table.hpp>
-#include <string>
 
 namespace avm
 {
@@ -18,13 +18,6 @@ const bool Table::isParentExist() const noexcept
     return m_Parent != nullptr;
 }
 
-void Table::printErrorMessage() const noexcept
-{
-    QString errMsg = "Parent database for table \"%1\" doesn't exist!";
-    errMsg = errMsg.arg(m_Name);
-    qCritical() << errMsg;
-}
-
 void Table::select(const QString &columns) const noexcept
 {
     if (isParentExist())
@@ -32,7 +25,7 @@ void Table::select(const QString &columns) const noexcept
         ;
     }
     else
-        printErrorMessage();
+        detail::printTableErrorMessage(m_Name);
 }
 
 void Table::select(const QString &columns, const QString &where) const noexcept
@@ -42,7 +35,7 @@ void Table::select(const QString &columns, const QString &where) const noexcept
         ;
     }
     else
-        printErrorMessage();
+        detail::printTableErrorMessage(m_Name);
 }
 
 void Table::insert(const QString &values) noexcept
@@ -61,7 +54,7 @@ void Table::insert(const QString &values) noexcept
         }
     }
     else
-        printErrorMessage();
+        detail::printTableErrorMessage(m_Name);
 }
 
 } // namespace avm

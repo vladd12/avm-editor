@@ -1,9 +1,7 @@
 #pragma once
 
-#include <QDebug>
 #include <QObject>
 #include <QString>
-#include <QtGlobal>
 #include <avm-editor/core/config.hpp>
 #include <memory>
 
