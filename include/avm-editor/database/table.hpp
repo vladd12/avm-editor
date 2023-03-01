@@ -1,5 +1,6 @@
 #pragma once
 
+#include <SQLiteCpp/Statement.h>
 #include <avm-editor/core/core.hpp>
 
 namespace avm
@@ -15,6 +16,8 @@ private:
     QString m_Name;
 
     const bool isParentExist() const noexcept;
+    void selectRowsParse(SQLite::Statement &stm) const;
+    void selectColumnsParse(SQLite::Statement &stm) const;
 
 public:
     /// \brief Default constructor.
@@ -31,10 +34,12 @@ public:
     Table(Table &&rhs) = default;
     Table &operator=(Table &&rhs) = default;
 
+    /// \brief Verifying table and access to the database.
     bool verify() const noexcept;
 
-    void select(const QString &columns) const noexcept;
-    void select(const QString &columns, const QString &where) const noexcept;
+    void select(const QString &columns, const QString &where = "") const noexcept;
+
+    /// \brief Inserting a data represented by values in the table.
     bool insert(const QString &values) noexcept;
 };
 

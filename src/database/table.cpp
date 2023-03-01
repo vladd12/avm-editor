@@ -23,24 +23,44 @@ bool Table::verify() const noexcept
     return isParentExist();
 }
 
-void Table::select(const QString &columns) const noexcept
+void Table::select(const QString &columns, const QString &where) const noexcept
 {
     if (isParentExist())
     {
-        ;
+        auto query = QString("SELECT %1 FROM %2").arg(columns, m_Name);
+        if (where.length() > 0)
+            query += QString(" WHERE %1").arg(where);
+        try
+        {
+            auto stdQuery = query.toStdString();
+            SQLite::Statement stm(m_Parent->m_db, stdQuery.c_str());
+            selectRowsParse(stm);
+        } catch (const SQLite::Exception &ex)
+        {
+            qCritical(ex.what());
+        }
     }
     else
         detail::printTableErrorMessage(m_Name);
 }
 
-void Table::select(const QString &columns, const QString &where) const noexcept
+void Table::selectRowsParse(SQLite::Statement &stm) const
 {
-    if (isParentExist())
+    while (stm.executeStep())
     {
-        ;
+        selectColumnsParse(stm);
     }
-    else
-        detail::printTableErrorMessage(m_Name);
+}
+
+void Table::selectColumnsParse(SQLite::Statement &stm) const
+{
+    auto colCount = stm.getColumnCount();
+    for (int i = 0; i < colCount; i++)
+    {
+        std::string colName(stm.getColumnName(i));
+        std::string colData(stm.getColumnDeclaredType(i));
+        stm.getColumn(i);
+    }
 }
 
 bool Table::insert(const QString &values) noexcept
