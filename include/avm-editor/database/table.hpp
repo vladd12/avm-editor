@@ -31,9 +31,11 @@ public:
     Table(Table &&rhs) = default;
     Table &operator=(Table &&rhs) = default;
 
+    bool verify() const noexcept;
+
     void select(const QString &columns) const noexcept;
     void select(const QString &columns, const QString &where) const noexcept;
-    void insert(const QString &values) noexcept;
+    bool insert(const QString &values) noexcept;
 };
 
 } // namespace avm

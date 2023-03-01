@@ -8,13 +8,9 @@ namespace avm
 Database::Database(const std::string &filepath, const int flags, const int timeout, QObject *parent)
     : QObject(parent), m_db(filepath, flags, timeout)
 {
-    constexpr auto value = 15;
-    int i = 1;
-    i = i + value;
-    Q_UNUSED(i);
 }
 
-Table Database::createTable(const QString &tableName, const QString &schema) noexcept
+Table Database::createTable(const QString &tableName, const QString &schema)
 {
     auto query = "CREATE TABLE IF NOT EXISTS " + tableName + " (" + schema + ")";
     try
@@ -25,14 +21,10 @@ Table Database::createTable(const QString &tableName, const QString &schema) noe
     {
         detail::printExceptionMessage(e);
         return Table();
-    } catch (...)
-    {
-        /// Something bad was here
-        return Table();
     }
 }
 
-Table Database::getTable(const QString &tableName) noexcept
+Table Database::getTable(const QString &tableName)
 {
     try
     {
@@ -47,7 +39,7 @@ Table Database::getTable(const QString &tableName) noexcept
     }
 }
 
-void Database::dropTable(const QString &tableName) noexcept
+void Database::dropTable(const QString &tableName)
 {
     auto query = "DROP TABLE IF EXISTS " + tableName;
     try

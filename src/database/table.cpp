@@ -18,6 +18,11 @@ const bool Table::isParentExist() const noexcept
     return m_Parent != nullptr;
 }
 
+bool Table::verify() const noexcept
+{
+    return isParentExist();
+}
+
 void Table::select(const QString &columns) const noexcept
 {
     if (isParentExist())
@@ -38,7 +43,7 @@ void Table::select(const QString &columns, const QString &where) const noexcept
         detail::printTableErrorMessage(m_Name);
 }
 
-void Table::insert(const QString &values) noexcept
+bool Table::insert(const QString &values) noexcept
 {
     if (isParentExist())
     {
@@ -48,13 +53,16 @@ void Table::insert(const QString &values) noexcept
         try
         {
             m_Parent->m_db.exec(stdQuery.c_str());
+            return true;
         } catch (const SQLite::Exception &ex)
         {
             qCritical(ex.what());
+            return false;
         }
     }
     else
         detail::printTableErrorMessage(m_Name);
+    return false;
 }
 
 } // namespace avm

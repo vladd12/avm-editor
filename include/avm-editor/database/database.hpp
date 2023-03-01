@@ -17,9 +17,9 @@ private:
 public:
     explicit Database(const std::string &filepath, const int flags, const int timeout, QObject *parent = nullptr);
 
-    Table createTable(const QString &tableName, const QString &schema) noexcept;
-    Table getTable(const QString &tableName) noexcept;
-    void dropTable(const QString &tableName) noexcept;
+    Table createTable(const QString &tableName, const QString &schema);
+    Table getTable(const QString &tableName);
+    void dropTable(const QString &tableName);
 };
 
 libapi QUniquePtr<Database> createDatabase( //
