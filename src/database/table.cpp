@@ -59,7 +59,7 @@ void Table::selectColumnsParse(SQLite::Statement &stm) const
     {
         std::string colName(stm.getColumnName(i));
         std::string colData(stm.getColumnDeclaredType(i));
-        stm.getColumn(i);
+        auto col = stm.getColumn(i);
     }
 }
 

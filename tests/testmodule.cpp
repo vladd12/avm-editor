@@ -12,10 +12,11 @@ void TestModule::testOne()
     auto dbPtr = avm::createDatabase("test1.db", this);
     status = dbPtr.get() != nullptr;
     QVERIFY(status);
-    auto testTable = dbPtr->createTable("test", "id INTEGER PRIMARY KEY, value TEXT");
+    auto testTable = dbPtr->createTable("test", "id INTEGER PRIMARY KEY NOT NULL, value TEXT");
     status = testTable.verify();
     QVERIFY(status);
     status = testTable.insert("NULL, \"value\"");
+    testTable.select("*");
     QVERIFY(status);
 }
 
