@@ -1,27 +1,33 @@
 #pragma once
 
 #include <QList>
-#include <SQLiteCpp/Column.h>
 #include <avm-editor/core/core.hpp>
-#include <cstdint>
-#include <variant>
+#include <avm-editor/database/detail/datacell.hpp>
 
 namespace avm
 {
-using DataCell = std::variant<std::int32_t, std::int64_t, double, const char *, const void *>;
 
-DataCell libapi packDataCell(const SQLite::Column &column) noexcept;
-
-void libapi unpackDataCell() noexcept;
-
+/// \brief Class for representing a data of
+/// the single row in the database's table.
 class libapi DataTuple
 {
-public:
 private:
-    QList<DataCell> data;
+    QList<detail::DataCell> data;
 
 public:
-    explicit DataTuple() noexcept;
+    DataTuple() = default;
+    DataTuple &operator=(const DataTuple &rhs) = default;
+
+    /// \brief Parametric c-tor.
+    explicit DataTuple(const SQLite::Column &column) noexcept;
+    /// \brief Copying c-tor.
+    explicit DataTuple(const DataTuple &rhs) noexcept;
+    /// \brief Move c-tor.
+    explicit DataTuple(const DataTuple &&rhs) noexcept;
+
+    /// \brief Converting column's data to the DataCell
+    /// type and append to the current tuple.
+    void append(const SQLite::Column &column) noexcept;
 };
 
 }

@@ -39,6 +39,7 @@ set(AVM_EDITOR_PUBLIC_HEADERS
     include/${PROJECT_NAME}/database/database.hpp
     include/${PROJECT_NAME}/database/datatuple.hpp
     include/${PROJECT_NAME}/database/table.hpp
+    include/${PROJECT_NAME}/database/detail/datacell.hpp
     include/${PROJECT_NAME}/database/detail/insert_impl.hpp
 )
 
@@ -55,6 +56,7 @@ set(AVM_EDITOR_SOURCES
     src/database/database.cpp
     src/database/datatuple.cpp
     src/database/table.cpp
+    src/database/detail/datacell.cpp
     src/database/detail/file_ops.cpp
     src/database/detail/insert_impl.cpp
     src/database/detail/messages_printer.cpp
